@@ -1,239 +1,230 @@
-// Get current day using moment.js
-var currentDay = moment().format("dddd, MMMM Do");
+var cityList =$("#city-list");
+var cities = [];
+var key = "fc8bffadcdca6a94d021c093eac22797";
 
-// Set each timeblock in the daily schedule using moment.js
-var hour9 = moment().hour(9);
-var hour10 = moment().hour(10);
-var hour11 = moment().hour(11);
-var hour12 = moment().hour(12);
-var hour13 = moment().hour(13);
-var hour14 = moment().hour(14);
-var hour15 = moment().hour(15);
-var hour16 = moment().hour(16);
-var hour17 = moment().hour(17);
-var hour18 = moment().hour(18);
-
-// Create an array of hour blocks for code generation
-var hours = [hour9, hour10, hour11, hour12, hour13, hour14, hour15, hour16, hour17];
-
-// Get local storage data or set to empty
-var events9 = JSON.parse(localStorage.getItem('hour9')) || "";
-var events10 = JSON.parse(localStorage.getItem('hour10')) || "";
-var events11 = JSON.parse(localStorage.getItem('hour11')) || "";
-var events12 = JSON.parse(localStorage.getItem('hour12')) || "";
-var events13 = JSON.parse(localStorage.getItem('hour13')) || "";
-var events14 = JSON.parse(localStorage.getItem('hour14')) || "";
-var events15 = JSON.parse(localStorage.getItem('hour15')) || "";
-var events16 = JSON.parse(localStorage.getItem('hour16')) || "";
-var events17 = JSON.parse(localStorage.getItem('hour17')) || "";
-
-// Generate all timeblocks and insert saved local storage data
-$.each(hours, function (index, value) {
-    events = [events9, events10, events11, events12, events13, events14, events15, events16, events17]
-    $(".container").append("<div class='row'><div class='col-2 hour text-right' id='hour" +
-        (index + 9) + "'><span>" + value.format("h A") + "</span></div><div class='col-8 event-group' id='timeblock" +
-        (index + 9) + "'><textarea class='events col-12' id='eventblock" + (index + 9) + "'>" + events[index] + "</textarea></div>" +
-        "<div class='col-2 save-delete' id='save-delete" + (index + 9) + "'><i class='fas fa-save' title='Save Event'></i> <i class='fas fa-trash' title='Remove Event'></i></div></div></div>");
-});
-
-// Display current day at top of planner
-$("#currentDay").text(currentDay);
-
-// Audit each time block to display past, current and future timeblocks
-var auditTime = function () {
-    currentTime = moment().format("hh:mm:ss");
-    // $("#currentDay").text(currentTime);
-
-    // Audit hour 9 and set color
-    if (moment().isBetween(hour9, hour10)) {
-        $("#timeblock9").addClass("present");
-    }
-    else if (moment().isAfter(hour10)) {
-        $("#timeblock9").addClass("past");
-    }
-    else {
-        $("#timeblock9").addClass("future");
-    }
-
-    // Audit hour 10 and set color
-    if (moment().isBetween(hour10, hour11)) {
-        $("#timeblock10").addClass("present");
-    }
-    else if (moment().isAfter(hour11)) {
-        $("#timeblock10").addClass("past");
-    }
-    else {
-        $("#timeblock10").addClass("future");
-    }
-
-    // Audit hour 11 and set color
-    if (moment().isBetween(hour11, hour12)) {
-        $("#timeblock11").addClass("present");
-    }
-    else if (moment().isAfter(hour12)) {
-        $("#timeblock11").addClass("past");
-    }
-    else {
-        $("#timeblock11").addClass("future");
-    }
-
-    // Audit hour 12 and set color
-    if (moment().isBetween(hour12, hour13)) {
-        $("#timeblock12").addClass("present");
-    }
-    else if (moment().isAfter(hour13)) {
-        $("#timeblock12").addClass("past");
-    }
-    else {
-        $("#timeblock12").addClass("future");
-    }
-
-    // Audit hour 13 and set color
-    if (moment().isBetween(hour13, hour14)) {
-        $("#timeblock13").addClass("present");
-    }
-    else if (moment().isAfter(hour14)) {
-        $("#timeblock13").addClass("past");
-    }
-    else {
-        $("#timeblock13").addClass("future");
-    }
-
-    // Audit hour 14 and set color
-    if (moment().isBetween(hour14, hour15)) {
-        $("#timeblock14").addClass("present");
-    }
-    else if (moment().isAfter(hour15)) {
-        $("#timeblock14").addClass("past");
-    }
-    else {
-        $("#timeblock14").addClass("future");
-    }
-
-    // Audit hour 15 and set color
-    if (moment().isBetween(hour15, hour16)) {
-        $("#timeblock15").addClass("present");
-    }
-    else if (moment().isAfter(hour16)) {
-        $("#timeblock15").addClass("past");
-    }
-    else {
-        $("#timeblock15").addClass("future");
-    }
-
-    // Audit hour 16 and set color
-    if (moment().isBetween(hour16, hour17)) {
-        $("#timeblock16").addClass("present");
-    }
-    else if (moment().isAfter(hour17)) {
-        $("#timeblock16").addClass("past");
-    }
-    else {
-        $("#timeblock16").addClass("future");
-    }
-
-    // Audit hour 17 and set color
-    if (moment().isBetween(hour17, hour18)) {
-        $("#timeblock17").addClass("present");
-    }
-    else if (moment().isAfter(hour18)) {
-        $("#timeblock17").addClass("past");
-    }
-    else {
-        $("#timeblock17").addClass("future");
-    };
+//Format for day
+function FormatDay(date){
+    var date = new Date();
+    console.log(date);
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    
+    var dayOutput = date.getFullYear() + '/' +
+        (month<10 ? '0' : '') + month + '/' +
+        (day<10 ? '0' : '') + day;
+    return dayOutput;
 }
-// End Audit Timeblock
 
 
 
-// Add delete event function for each time block
-$("#save-delete9").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour9");
-    $("#eventblock9").val("");
-})
-$("#save-delete10").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour10");
-    $("#eventblock10").val("");
-})
-$("#save-delete11").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour11");
-    $("#eventblock11").val("");
-})
-$("#save-delete12").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour12");
-    $("#eventblock12").val("");
-})
-$("#save-delete13").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour13");
-    $("#eventblock13").val("");
-})
-$("#save-delete14").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour14");
-    $("#eventblock14").val("");
-})
-$("#save-delete15").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour15");
-    $("#eventblock15").val("");
-})
-$("#save-delete16").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour16");
-    $("#eventblock16").val("");
-})
-$("#save-delete17").on("click", "i.fa-trash", function () {
-    localStorage.removeItem("hour17");
-    $("#eventblock17").val("");
-})
-// End delete event functions
+//Calling function init();
+init();
 
+//Function init();
+function init(){
+    //Get stored cities from localStorage
+    //Parsing the JSON string to an object
+    var storedCities = JSON.parse(localStorage.getItem("cities"));
 
-// Add save event function for each time block
-$("#save-delete9").on("click", "i.fa-save", function () {
-    var event9 = $("#eventblock9").val().trim();
-    localStorage.setItem('hour9', JSON.stringify(event9));
-})
-$("#save-delete10").on("click", "i.fa-save", function () {
-    var event10 = $("#eventblock10").val().trim();
-    localStorage.setItem('hour10', JSON.stringify(event10));
-})
-$("#save-delete11").on("click", "i.fa-save", function () {
-    var event11 = $("#eventblock11").val().trim();
-    localStorage.setItem('hour11', JSON.stringify(event11));
-})
-$("#save-delete12").on("click", "i.fa-save", function () {
-    var event12 = $("#eventblock12").val().trim();
-    localStorage.setItem('hour12', JSON.stringify(event12));
-})
-$("#save-delete13").on("click", "i.fa-save", function () {
-    var event13 = $("#eventblock13").val().trim();
-    localStorage.setItem('hour13', JSON.stringify(event13));
-})
-$("#save-delete14").on("click", "i.fa-save", function () {
-    var event14 = $("#eventblock14").val().trim();
-    localStorage.setItem('hour14', JSON.stringify(event14));
-})
-$("#save-delete15").on("click", "i.fa-save", function () {
-    var event15 = $("#eventblock15").val().trim();
-    localStorage.setItem('hour15', JSON.stringify(event15));
-})
-$("#save-delete16").on("click", "i.fa-save", function () {
-    var event16 = $("#eventblock16").val().trim();
-    localStorage.setItem('hour16', JSON.stringify(event16));
-})
-$("#save-delete17").on("click", "i.fa-save", function () {
-    var event17 = $("#eventblock17").val().trim();
-    localStorage.setItem('hour17', JSON.stringify(event17));
-})
-// End save event functions
+    // If cities were retrieved from localStorage, update the cities array to it
+    if (storedCities !== null) {
+        cities = storedCities;
+      }
+    // Render cities to the DOM
+    renderCities();
+    // console.log(cities);
+}
 
+//Function StoreCities()
+function storeCities(){
+   // Stringify and set "cities" key in localStorage to cities array
+  localStorage.setItem("cities", JSON.stringify(cities));
+  console.log(localStorage);
+}
 
-// This function runs but the time is never refreshed?
-setInterval(function () {
-    $(".event-group .events").each(function (index, el) {
-        auditTime(el);
-        //console.log(currentTime);
+//Function renderCities()
+function renderCities() {
+    // Clear cityList element
+    // cityList.text = "";
+    // cityList.HTML = "";
+    cityList.empty();
+    
+    // Render a new li for each city
+    for (var i = 0; i < cities.length; i++) {
+      var city = cities[i];
+      
+      var li = $("<li>").text(city);
+      li.attr("id","listC");
+      li.attr("data-city", city);
+      li.attr("class", "list-group-item");
+      console.log(li);
+      cityList.prepend(li);
+    }
+    //Get Response weather for the first city only
+    if (!city){
+        return
+    } 
+    else{
+        getResponseWeather(city)
+    };
+}   
+
+  //When form is submitted...
+  $("#add-city").on("click", function(event){
+      event.preventDefault();
+
+    // This line will grab the city from the input box
+    var city = $("#city-input").val().trim();
+    
+    // Return from function early if submitted city is blank
+    if (city === "") {
+        return;
+    }
+    //Adding city-input to the city array
+    cities.push(city);
+    // Store updated cities in localStorage, re-render the list
+  storeCities();
+  renderCities();
+  });
+
+  //Function get Response Weather 
+  
+  function getResponseWeather(cityName){
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" +cityName+ "&appid=" + key; 
+
+    //Clear content of today-weather
+    $("#today-weather").empty();
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+        
+      // Create a new table row element
+      cityTitle = $("<h3>").text(response.name + " "+ FormatDay());
+      $("#today-weather").append(cityTitle);
+      var TempetureToNum = parseInt((response.main.temp)* 9/5 - 459);
+      var cityTemperature = $("<p>").text("Tempeture: "+ TempetureToNum + " °F");
+      $("#today-weather").append(cityTemperature);
+      var cityHumidity = $("<p>").text("Humidity: "+ response.main.humidity + " %");
+      $("#today-weather").append(cityHumidity);
+      var cityWindSpeed = $("<p>").text("Wind Speed: "+ response.wind.speed + " MPH");
+      $("#today-weather").append(cityWindSpeed);
+      var CoordLon = response.coord.lon;
+      var CoordLat = response.coord.lat;
+    
+        //Api to get UV index
+        var queryURL2 = "https://api.openweathermap.org/data/2.5/uvi?appid="+ key+ "&lat=" + CoordLat +"&lon=" + CoordLon;
+        $.ajax({
+            url: queryURL2,
+            method: "GET"
+        }).then(function(responseuv) {
+            var cityUV = $("<span>").text(responseuv.value);
+            var cityUVp = $("<p>").text("UV Index: ");
+            cityUVp.append(cityUV);
+            $("#today-weather").append(cityUVp);
+            console.log(typeof responseuv.value);
+            if(responseuv.value > 0 && responseuv.value <=2){
+                cityUV.attr("class","green")
+            }
+            else if (responseuv.value > 2 && responseuv.value <= 5){
+                cityUV.attr("class","yellow")
+            }
+            else if (responseuv.value >5 && responseuv.value <= 7){
+                cityUV.attr("class","orange")
+            }
+            else if (responseuv.value >7 && responseuv.value <= 10){
+                cityUV.attr("class","red")
+            }
+            else{
+                cityUV.attr("class","purple")
+            }
+        });
+    
+        //Api to get 5-day forecast  
+        var queryURL3 = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + key;
+            $.ajax({
+            url: queryURL3,
+            method: "GET"
+        }).then(function(response5day) { 
+            $("#boxes").empty();
+            console.log(response5day);
+            for(var i=0, j=0; j<=5; i=i+6){
+                var read_date = response5day.list[i].dt;
+                if(response5day.list[i].dt != response5day.list[i+1].dt){
+                    var FivedayDiv = $("<div>");
+                    FivedayDiv.attr("class","col-3 m-2 bg-primary")
+                    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+                    d.setUTCSeconds(read_date);
+                    var date = d;
+                    console.log(date);
+                    var month = date.getMonth()+1;
+                    var day = date.getDate();
+                    var dayOutput = date.getFullYear() + '/' +
+                    (month<10 ? '0' : '') + month + '/' +
+                    (day<10 ? '0' : '') + day;
+                    var Fivedayh4 = $("<h6>").text(dayOutput);
+                    //Set src to the imags
+                    var imgtag = $("<img>");
+                    var skyconditions = response5day.list[i].weather[0].main;
+                    if(skyconditions==="Clouds"){
+                        imgtag.attr("src", "https://img.icons8.com/color/48/000000/cloud.png")
+                    } else if(skyconditions==="Clear"){
+                        imgtag.attr("src", "https://img.icons8.com/color/48/000000/summer.png")
+                    }else if(skyconditions==="Rain"){
+                        imgtag.attr("src", "https://img.icons8.com/color/48/000000/rain.png")
+                    }
+
+                    var pTemperatureK = response5day.list[i].main.temp;
+                    console.log(skyconditions);
+                    var TempetureToNum = parseInt((pTemperatureK)* 9/5 - 459);
+                    var pTemperature = $("<p>").text("Tempeture: "+ TempetureToNum + " °F");
+                    var pHumidity = $("<p>").text("Humidity: "+ response5day.list[i].main.humidity + " %");
+                    FivedayDiv.append(Fivedayh4);
+                    FivedayDiv.append(imgtag);
+                    FivedayDiv.append(pTemperature);
+                    FivedayDiv.append(pHumidity);
+                    $("#boxes").append(FivedayDiv);
+                    console.log(response5day);
+                    j++;
+                }
+            
+        }
+      
     });
+      
 
-}, (1000 * 60)); // 1000ms x 60 = 1 minute x 30 = 30 minutes
+    });
+    
+  }
 
-auditTime();
+  //Click function to each Li 
+  $(document).on("click", "#listC", function() {
+    var thisCity = $(this).attr("data-city");
+    getResponseWeather(thisCity);
+  });
+
+
+    
+  
+  
+    
+
+
+
+  
+
+
+
+
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
