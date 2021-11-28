@@ -119,19 +119,22 @@ function renderCities() {
             method: "GET"
         }).then(function(responseuv) {
             var cityUV = $("<span>").text(responseuv.value);
-            var cityUVp = $("<p>").text("UV Index: ");
+         var cityUVp = $("<p>").text("UV Index: ");
             cityUVp.append(cityUV);
             $("#today-weather").append(cityUVp);
+            if(cityUV <= 2){
             console.log(typeof responseuv.value);
             if(responseuv.value > 0 && responseuv.value <=2){
                 cityUV.attr("class","green")
             }
+            else if (cityUV <= 7){
             else if (responseuv.value > 2 && responseuv.value <= 5){
                 cityUV.attr("class","yellow")
             }
             else if (responseuv.value >5 && responseuv.value <= 7){
                 cityUV.attr("class","orange")
             }
+            else{
             else if (responseuv.value >7 && responseuv.value <= 10){
                 cityUV.attr("class","red")
             }
@@ -139,41 +142,24 @@ function renderCities() {
                 cityUV.attr("class","purple")
             }
         });
-    
+
+        //Api to get 5-day forecast
+        var cnt = 5;   
         //Api to get 5-day forecast  
         var queryURL3 = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + key;
             $.ajax({
             url: queryURL3,
-            method: "GET"
-        }).then(function(response5day) { 
-            $("#boxes").empty();
-            console.log(response5day);
-            for(var i=0, j=0; j<=5; i=i+6){
-                var read_date = response5day.list[i].dt;
-                if(response5day.list[i].dt != response5day.list[i+1].dt){
-                    var FivedayDiv = $("<div>");
-                    FivedayDiv.attr("class","col-3 m-2 bg-primary")
-                    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-                    d.setUTCSeconds(read_date);
-                    var date = d;
-                    console.log(date);
-                    var month = date.getMonth()+1;
-                    var day = date.getDate();
-                    var dayOutput = date.getFullYear() + '/' +
-                    (month<10 ? '0' : '') + month + '/' +
-                    (day<10 ? '0' : '') + day;
-                    var Fivedayh4 = $("<h6>").text(dayOutput);
-                    //Set src to the imags
+@@ -161,7 +167,7 @@ function renderCities() {
                     var imgtag = $("<img>");
                     var skyconditions = response5day.list[i].weather[0].main;
                     if(skyconditions==="Clouds"){
+                        imgtag.attr("src", "https://img.icons8.com/color/48/000000/light-rain-2.png/")
                         imgtag.attr("src", "https://img.icons8.com/color/48/000000/cloud.png")
                     } else if(skyconditions==="Clear"){
                         imgtag.attr("src", "https://img.icons8.com/color/48/000000/summer.png")
                     }else if(skyconditions==="Rain"){
                         imgtag.attr("src", "https://img.icons8.com/color/48/000000/rain.png")
                     }
-
                     var pTemperatureK = response5day.list[i].main.temp;
                     console.log(skyconditions);
                     var TempetureToNum = parseInt((pTemperatureK)* 9/5 - 459);
@@ -191,19 +177,6 @@ function renderCities() {
         }
       
     });
-      
-
-    });
-    
-  }
-
-  //Click function to each Li 
-  $(document).on("click", "#listC", function() {
-    var thisCity = $(this).attr("data-city");
-    getResponseWeather(thisCity);
-  });
-
-
     
   
   
